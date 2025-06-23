@@ -145,7 +145,7 @@ Mindmap/
 
 ## 📄 License
 
-MIT License
+[MIT License](https://github.com/Hamizkhan08/Mindmap/blob/main/LICENSE)
 
 ---
 
