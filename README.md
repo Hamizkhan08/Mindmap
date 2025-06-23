@@ -155,6 +155,9 @@ MIT License
 * [Groq AI](https://console.groq.com/)
 * [YouTube Transcript API](https://pypi.org/project/youtube-transcript-api/)
 * [Three.js](https://threejs.org/)
-
-##Author
+---
+## Author
 [Hamiz Khan](https://github.com/Hamizkhan08)
+
+---
+
