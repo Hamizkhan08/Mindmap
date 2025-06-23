@@ -1,3 +1,4 @@
+![Screenshot 2025-06-23 230441](https://github.com/user-attachments/assets/04e76195-c716-4031-9f7a-d4628df7e76a)
 ![Screenshot 2025-06-23 230626](https://github.com/user-attachments/assets/f08b1b4a-40e0-4940-8091-e17a439dae76)
 
 # 🧠 YouTube to 3D Mind Map Generator
@@ -99,7 +100,6 @@ Mindmap/
 ---
 
 ## 📸 Screenshots
-![Screenshot 2025-06-23 230441](https://github.com/user-attachments/assets/04e76195-c716-4031-9f7a-d4628df7e76a)
 ![Screenshot 2025-06-23 230455](https://github.com/user-attachments/assets/c2649311-00d4-4c9d-a62d-bcc5356a0839)
 ![Screenshot 2025-06-23 230606](https://github.com/user-attachments/assets/191aee00-3cb7-4068-a44e-9c4ebeed4f74)
 ![Screenshot 2025-06-23 230626](https://github.com/user-attachments/assets/2e4a7623-cf87-45d1-a366-62d05ffc5380)
