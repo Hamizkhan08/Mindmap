@@ -1,4 +1,6 @@
-![Screenshot 2025-06-23 230626](https://github.com/user-attachments/assets/f08b1b4a-40e0-4940-8091-e17a439dae76)# 🧠 YouTube to 3D Mind Map Generator
+![Screenshot 2025-06-23 230626](https://github.com/user-attachments/assets/f08b1b4a-40e0-4940-8091-e17a439dae76)
+
+# 🧠 YouTube to 3D Mind Map Generator
 
 This project is an AI-powered web application that takes a YouTube video URL, extracts its transcript, analyzes the content using **Google Gemini AI**, and generates an interactive **3D mind map** to visually represent the core ideas and concepts.
 
