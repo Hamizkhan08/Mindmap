@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mind Map Generator</title>
+</head>
+<body>
+    <h2>Paste Gemini Summary Here</h2>
+    <form method="POST">
+        <textarea name="summary" rows="15" cols="80" placeholder="Paste bullet points here" required></textarea><br>
+        <button type="submit">Generate Mind Map</button>
+    </form>
+
+    {% if image_url %}
+        <h3>Generated Mind Map:</h3>
+        <img src="{{ image_url }}" alt="Mind Map">
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator - YouTube Mind Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .quiz-setup {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .setup-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .setup-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        select, input[type="number"], button {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-content {
+            display: none;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745 !important;
+            background: #28a745 !important;
+            color: white !important;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545 !important;
+            background: #dc3545 !important;
+            color: white !important;
+        }
+
+        .true-false-options {
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .true-false-options .option {
+            flex: 1;
+            max-width: 150px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .fill-blank-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .fill-blank-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .fill-blank-input.correct {
+            border-color: #28a745 !important;
+            background-color: #e9f7ef;
+        }
+        .fill-blank-input.incorrect {
+            border-color: #dc3545 !important;
+            background-color: #fce8e6;
+        }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation h4 {
+            color: #1976d2;
+            margin-bottom: 8px;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .control-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .score-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #e9ecef;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-setup {
+                flex-direction: column;
+            }
+            
+            .setup-group {
+                width: 100%;
+            }
+            
+            .true-false-options {
+                flex-direction: column;
+            }
+            
+            .true-false-options .option {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Quiz Generator</h1>
+            <p>Test your knowledge with AI-generated questions from video content</p>
+        </div>
+
+        <div class="quiz-container">
+            <div id="quiz-setup" class="quiz-setup">
+                <div class="setup-group">
+                    <label for="quiz-type">Quiz Type:</label>
+                    <select id="quiz-type">
+                        <option value="mixed">Mixed Questions</option>
+                        <option value="mcq">Multiple Choice</option>
+                        <option value="true_false">True/False</option>
+                        <option value="fill_blank">Fill in Blanks</option>
+                    </select>
+                </div>
+
+                <div class="setup-group">
+                    <label for="num-questions">Number of Questions:</label>
+                    <input type="number" id="num-questions" min="1" max="20" value="10">
+                </div>
+
+                <button id="generate-quiz-btn" class="generate-btn" onclick="generateQuiz()">
+                    Generate Quiz
+                </button>
+            </div>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Generating your quiz questions...</p>
+            </div>
+
+            <div id="error-container"></div>
+
+            <div id="quiz-content" class="quiz-content">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                </div>
+
+                <div id="quiz-header" class="quiz-header">
+                    <h2 id="quiz-title">Quiz Title</h2>
+                    <p id="quiz-info">Question 1 of 10</p>
+                </div>
+
+                <div id="questions-container"></div>
+
+                <div class="quiz-controls">
+                    <button id="prev-btn" class="control-btn" onclick="previousQuestion()" disabled>
+                        Previous
+                    </button>
+                    
+                    <div class="score-display">
+                        <span id="score-text">Score: 0/0</span>
+                    </div>
+                    
+                    <button id="next-btn" class="control-btn" onclick="nextQuestion()">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <a href="/" class="back-link">← Back to Mind Map Generator</a>
+    </div>
+
+    <script>
+        // Global state variables
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let score = 0;
+        let quizCompleted = false;
+
+        // Get analysis data from localStorage (passed from the main page)
+        const analysisData = JSON.parse(localStorage.getItem('analysisData') || '{}');
+
+        /**
+         * Initiates the quiz generation process by calling the backend API.
+         */
+        function generateQuiz() {
+            if (!analysisData.analysis) {
+                showError('No video analysis data found. Please go back and analyze a video first.');
+                return;
+            }
+
+            const quizType = document.getElementById('quiz-type').value;
+            const numQuestions = parseInt(document.getElementById('num-questions').value, 10);
+
+            if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > 20) {
+                showError('Please enter a number of questions between 1 and 20.');
+                return;
+            }
+            
+            document.getElementById('quiz-setup').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error-container').innerHTML = '';
+            document.getElementById('generate-quiz-btn').disabled = true;
+
+            fetch('/generate-quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    analysis: analysisData.analysis,
+                    transcript_text: analysisData.transcript_text || '',
+                    quiz_type: quizType,
+                    num_questions: numQuestions
+                })
+            })
+            .then(response => {
+                if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('generate-quiz-btn').disabled = false;
+                
+                if (data.success && data.quiz && data.quiz.questions.length > 0) {
+                    currentQuiz = data.quiz;
+                    userAnswers = new Array(currentQuiz.questions.length).fill(null);
+                    currentQuestionIndex = 0;
+                    score = 0;
+                    quizCompleted = false;
+                    displayQuiz();
+                } else {
+                    showError(data.error || 'Failed to generate a valid quiz. The returned data was empty or invalid.');
+                    document.getElementById('quiz-setup').style.display = 'flex';
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('generate-quiz-btn').disabled = false;
+                showError('An error occurred while generating the quiz: ' + error.message);
+                document.getElementById('quiz-setup').style.display = 'flex';
+            });
+        }
+
+        /**
+         * Sets up the main quiz view after questions have been generated.
+         */
+        function displayQuiz() {
+            document.getElementById('quiz-content').style.display = 'block';
+            document.getElementById('quiz-title').textContent = currentQuiz.quiz_type;
+            updateScoreDisplay();
+            displayCurrentQuestion();
+        }
+
+        /**
+         * Renders the current question based on its type and the current state.
+         */
+        function displayCurrentQuestion() {
+            if (!currentQuiz) return;
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const container = document.getElementById('questions-container');
+            let optionsHtml = '';
+            
+            if (question.type === 'mcq') {
+                optionsHtml = '<div class="options">';
+                question.options.forEach((option, index) => {
+                    const isSelected = userAnswers[currentQuestionIndex] === index;
+                    optionsHtml += `<div class="option ${isSelected ? 'selected' : ''}" onclick="selectAnswer(${index})">${String.fromCharCode(65 + index)}. ${escapeHtml(option)}</div>`;
+                });
+                optionsHtml += '</div>';
+            } else if (question.type === 'true_false') {
+                optionsHtml = '<div class="options true-false-options">';
+                ['True', 'False'].forEach((option, index) => {
+                    const isSelected = userAnswers[currentQuestionIndex] === (index === 0);
+                    optionsHtml += `<div class="option ${isSelected ? 'selected' : ''}" onclick="selectAnswer(${index === 0})">${option}</div>`;
+                });
+                optionsHtml += '</div>';
+            } else if (question.type === 'fill_blank') {
+                const userAnswer = userAnswers[currentQuestionIndex] || '';
+                optionsHtml = `<input type="text" class="fill-blank-input" placeholder="Type your answer here..." oninput="selectAnswer(this.value)" value="${escapeHtml(userAnswer)}" ${quizCompleted ? 'disabled' : ''}>`;
+            }
+
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Question ${currentQuestionIndex + 1} of ${currentQuiz.questions.length}</div>
+                    <div class="question-text">${escapeHtml(question.question)}</div>
+                    ${optionsHtml}
+                    <div class="explanation" id="explanation-${currentQuestionIndex}"></div>
+                </div>`;
+            
+            updateQuizInfo();
+            updateControls();
+            updateProgressBar();
+            
+            if (quizCompleted) {
+                showQuestionResult(currentQuestionIndex);
+            }
+        }
+        
+        /**
+         * Stores the user's answer for the current question.
+         * @param {any} answer - The user's selected answer.
+         */
+        function selectAnswer(answer) {
+            if (quizCompleted) return;
+            userAnswers[currentQuestionIndex] = (typeof answer === 'string') ? answer.trim() : answer;
+            if (currentQuiz.questions[currentQuestionIndex].type !== 'fill_blank') {
+                displayCurrentQuestion(); // Re-render for selection feedback on MCQ/TF
+            }
+        }
+
+        /**
+         * Navigates to the next question or finishes the quiz.
+         */
+        function nextQuestion() {
+            if (quizCompleted) {
+                if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                    currentQuestionIndex++;
+                    displayCurrentQuestion();
+                }
+            } else if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        /**
+         * Navigates to the previous question.
+         */
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayCurrentQuestion();
+            }
+        }
+
+        /**
+         * Evaluates all answers, calculates the final score, and shows the results.
+         */
+        function finishQuiz() {
+            quizCompleted = true;
+            score = 0;
+            currentQuiz.questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                if (userAnswer === null || userAnswer === undefined) return;
+                let isCorrect = false;
+                if (question.type === 'mcq' || question.type === 'true_false') {
+                    isCorrect = userAnswer === question.correct_answer;
+                } else if (question.type === 'fill_blank') {
+                    const normalizedUserAnswer = userAnswer.toLowerCase();
+                    isCorrect = question.correct_answers.some(ans => ans.toLowerCase() === normalizedUserAnswer);
+                }
+                if (isCorrect) score++;
+            });
+            updateScoreDisplay();
+            displayCurrentQuestion(); // Re-display current (last) question to show its result
+        }
+
+        /**
+         * Displays the result and explanation for a single question after the quiz is completed.
+         */
+        function showQuestionResult(index) {
+            const question = currentQuiz.questions[index];
+            const userAnswer = userAnswers[index];
+            const questionCard = document.querySelector('.question-card');
+            
+            const explanationDiv = document.getElementById(`explanation-${index}`);
+            if (explanationDiv && question.explanation) {
+                explanationDiv.innerHTML = `<h4>Explanation</h4><p>${escapeHtml(question.explanation)}</p>`;
+                explanationDiv.classList.add('show');
+            }
+
+            if (question.type === 'mcq' || question.type === 'true_false') {
+                const options = questionCard.querySelectorAll('.option');
+                options.forEach(opt => opt.onclick = null); // Disable clicks
+                const correctIndex = (question.type === 'mcq') ? question.correct_answer : (question.correct_answer ? 0 : 1);
+                if (options[correctIndex]) options[correctIndex].classList.add('correct');
+                
+                if (userAnswer !== null && userAnswer !== question.correct_answer) {
+                    const selectedIndex = (question.type === 'mcq') ? userAnswer : (userAnswer ? 0 : 1);
+                    if (options[selectedIndex]) options[selectedIndex].classList.add('incorrect');
+                }
+            } else if (question.type === 'fill_blank') {
+                const input = questionCard.querySelector('.fill-blank-input');
+                const normalizedUserAnswer = (userAnswer || '').toLowerCase();
+                const isCorrect = question.correct_answers.some(ans => ans.toLowerCase() === normalizedUserAnswer);
+                input.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+        }
+        
+        /**
+         * Updates the state and text of the navigation buttons.
+         */
+        function updateControls() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            if (quizCompleted) {
+                nextBtn.textContent = (currentQuestionIndex === currentQuiz.questions.length - 1) ? 'Restart Quiz' : 'Next';
+                nextBtn.onclick = (currentQuestionIndex === currentQuiz.questions.length - 1) ? restartQuiz : nextQuestion;
+            } else {
+                nextBtn.textContent = (currentQuestionIndex === currentQuiz.questions.length - 1) ? 'Finish Quiz' : 'Next';
+            }
+        }
+
+        /**
+         * Updates the progress bar at the top of the quiz.
+         */
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+        
+        /**
+         * Updates the question counter text (e.g., "Question 1 of 10").
+         */
+        function updateQuizInfo() {
+            if (!currentQuiz) return;
+            document.getElementById('quiz-info').textContent = `Question ${currentQuestionIndex + 1} of ${currentQuiz.questions.length}`;
+        }
+        
+        /**
+         * Updates the score display text.
+         */
+        function updateScoreDisplay() {
+            const total = currentQuiz ? currentQuiz.questions.length : 0;
+            document.getElementById('score-text').textContent = `Score: ${score}/${total}`;
+        }
+        
+        /**
+         * Resets the entire quiz by reloading the page.
+         */
+        function restartQuiz() {
+            location.reload();
+        }
+
+        /**
+         * Displays an error message in the UI.
+         */
+        function showError(message) {
+            document.getElementById('error-container').innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        /**
+         * Utility function to escape HTML special characters to prevent XSS.
+         */
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return str;
+            const p = document.createElement('p');
+            p.textContent = str;
+            return p.innerHTML;
+        }
+
+    </script>
+</body>
+</html>
