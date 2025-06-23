@@ -109,8 +109,6 @@ Mindmap/
 ![Screenshot 2025-06-23 230734](https://github.com/user-attachments/assets/2f4ef3cc-29e0-453d-8798-8ddf6a470c97)
 ![Screenshot 2025-06-23 230830](https://github.com/user-attachments/assets/94106491-a077-43f1-910e-f75954824135)
 
-> ![Mindmap Preview](mindmap.png)
-
 ---
 
 ## 🧠 How It Works
@@ -157,3 +155,6 @@ MIT License
 * [Groq AI](https://console.groq.com/)
 * [YouTube Transcript API](https://pypi.org/project/youtube-transcript-api/)
 * [Three.js](https://threejs.org/)
+
+##Author
+[Hamiz Khan](https://github.com/Hamizkhan08)
