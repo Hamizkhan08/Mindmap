@@ -23,12 +23,12 @@ from typing import Dict, List, Any
 # Configure Gemini API (keep your original setup)
 # IMPORTANT: For security, it's better to use an environment variable
 # like os.environ.get("GEMINI_API_KEY") instead of pasting your key here.
-genai.configure(api_key="AIzaSyDpBCBbH7FmViwAbjEMJzhpRBkKy-ARe28") # <-- PASTE YOUR API KEY HERE
+genai.configure(api_key="") # <-- PASTE YOUR API KEY HERE
 
 app = Flask(__name__)
 
 # ### NEW: Alternative AI provider for PDF generation only
-GROQ_API_KEY = os.environ.get("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")  # Get free key from console.groq.com
+GROQ_API_KEY = os.environ.get("")  # Get free key from console.groq.com
 
 # --- Helper Functions (KEEPING YOUR ORIGINAL LOGIC) ---
 
